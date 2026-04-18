@@ -91,6 +91,7 @@ const interviewReportSchema = z.object({
     .describe(
       "The title of the job for which the interview report is generated",
     ),
+    title: z.string().describe("The title of the job for which the interview report is generated"),
 });
 
 async function generateInterviewReport({
@@ -105,7 +106,7 @@ async function generateInterviewReport({
 `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
+    model: "gemini-1.5-flash",
     contents: prompt,
     config: {
       responseMimeType: "application/json",
@@ -159,7 +160,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                     `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.1-pro-preview",
+    model: "gemini-1.5-pro",
     contents: prompt,
     config: {
       responseMimeType: "application/json",
