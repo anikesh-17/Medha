@@ -54,10 +54,11 @@ async function registerUserController(req, res) {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     };
-    
+
     res.cookie("token", token, cookieOptions);
 
     return res.status(201).json({
@@ -102,7 +103,10 @@ async function loginUserController(req, res) {
     }
 
     // 4. Compare passwords with bcrypt
-    const isPasswordValid = await bcrypt.compare(String(password), user.password);
+    const isPasswordValid = await bcrypt.compare(
+      String(password),
+      user.password,
+    );
 
     // 5. Invalid password returns 401
     if (!isPasswordValid) {
@@ -121,8 +125,9 @@ async function loginUserController(req, res) {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     };
 
     res.cookie("token", token, cookieOptions);
@@ -154,7 +159,11 @@ async function logoutUserController(req, res) {
       await tokenBlackListModel.create({ token });
     }
 
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
     return res.status(200).json({
       message: "User logged out successfully",
