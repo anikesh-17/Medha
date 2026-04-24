@@ -100,26 +100,10 @@ Generate recruiter-friendly resumes optimized for:
 
 # 🛠 Tech Stack
 
-## Frontend
-| Technology | Purpose |
-|----------|---------|
-React (Vite) | UI Framework |
-SCSS/SASS | Styling |
-React Router | Routing |
-Axios | API Requests |
-
----
-
-## Backend
-| Technology | Purpose |
-|----------|---------|
-Node.js | Runtime |
-Express.js | Server |
-MongoDB | Database |
-Mongoose | ODM |
-Google Gemini | AI Engine |
-Puppeteer | PDF Generation |
-pdf-parse | Resume Parsing |
+**Frontend:** React, Vite, SCSS, Axios  
+**Backend:** Node.js, Express, MongoDB, Mongoose  
+**AI:** Google Gemini API  
+**Auth:** JWT, Bcrypt  
 
 ---
 
@@ -141,62 +125,6 @@ ATS Resume Optimization
 
 ---
 
-# 🚀 Getting Started
-
-## 1 Clone Repository
-
-```bash
-git clone https://github.com/yourusername/medha.git
-cd medha
-```
-
----
-
-## 2 Backend Setup
-
-```bash
-cd Backend
-npm install
-cp .env.example .env
-```
-
-Add environment variables:
-
-```env
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
-GOOGLE_GENAI_API_KEY=your_api_key
-```
-
-Run server:
-
-```bash
-npm run dev
-```
-
-Backend runs on:
-
-```bash
-http://localhost:3000
-```
-
----
-
-## 3 Frontend Setup
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
-Frontend runs on:
-
-```bash
-http://localhost:5173
-```
-
----
 
 # 📂 Project Structure
 
