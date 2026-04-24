@@ -103,18 +103,38 @@ async function generateInterviewReport({
                         Resume: ${resume}
                         Self Description: ${selfDescription}
                         Job Description: ${jobDescription}
+
+                        Respond STRICTLY with a raw JSON object matching EXACTLY this template structure:
+                        {
+                          "matchScore": 85,
+                          "title": "Job Title Here",
+                          "technicalQuestions": [
+                            { "question": "?", "intention": "?", "answer": "?" }
+                          ],
+                          "behavioralQuestions": [
+                            { "question": "?", "intention": "?", "answer": "?" }
+                          ],
+                          "skillGaps": [
+                            { "skill": "?", "severity": "low" }
+                          ],
+                          "preparationPlan": [
+                            { "day": 1, "focus": "?", "tasks": ["?"] }
+                          ]
+                        }
+                        
+                        Return ONLY the raw JSON format without markdown ticks or code blocks.
 `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-1.5-flash",
+    model: "gemini-3-flash-preview",
     contents: prompt,
     config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(interviewReportSchema),
+      responseMimeType: "application/json"
     },
   });
 
-  return JSON.parse(response.text);
+  const cleanText = response.text.replace(/```json/gi, "").replace(/```/gi, "").trim();
+  return JSON.parse(cleanText);
 }
 
 async function generatePdfFromHtml(htmlContent) {
@@ -160,15 +180,15 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                     `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-1.5-pro",
+    model: "gemini-3.1-pro-preview",
     contents: prompt,
     config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(resumePdfSchema),
+      responseMimeType: "application/json"
     },
   });
 
-  const jsonContent = JSON.parse(response.text);
+  const cleanText = response.text.replace(/```json/gi, "").replace(/```/gi, "").trim();
+  const jsonContent = JSON.parse(cleanText);
 
   const pdfBuffer = await generatePdfFromHtml(jsonContent.html);
 

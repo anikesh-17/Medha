@@ -18,6 +18,7 @@ export const useAuth = () => {
       if (data && data.user) setUser(data.user);
     } catch (err) {
       console.error(err);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -30,6 +31,7 @@ export const useAuth = () => {
       if (data && data.user) setUser(data.user);
     } catch (err) {
       console.error(err);
+      throw err;
     } finally {
       setLoading(false);
     }

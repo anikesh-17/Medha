@@ -16,7 +16,7 @@ export const useInterview = () => {
     throw new Error("useInterview must be used within an InterviewProvider");
   }
 
-  const { loading, setLoading, report, setReport, reports, setReports } =
+  const { loading, setLoading, isPdfLoading, setIsPdfLoading, report, setReport, reports, setReports } =
     context;
 
   const generateReport = async ({
@@ -72,7 +72,7 @@ export const useInterview = () => {
   };
 
   const getResumePdf = async (interviewReportId) => {
-    setLoading(true);
+    setIsPdfLoading(true);
     let response = null;
     try {
       response = await generateResumePdf({ interviewReportId });
@@ -81,13 +81,18 @@ export const useInterview = () => {
       );
       const link = document.createElement("a");
       link.href = url;
+      link.style.display = "none";
       link.setAttribute("download", `resume_${interviewReportId}.pdf`);
       document.body.appendChild(link);
       link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false);
+      setIsPdfLoading(false);
     }
   };
 
@@ -107,5 +112,6 @@ export const useInterview = () => {
     getReportById,
     getReports,
     getResumePdf,
+    isPdfLoading,
   };
 };

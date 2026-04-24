@@ -9,12 +9,17 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    handleLogin({ email, password });
-    navigate('/')
+    setErrorMsg("");
+    try {
+      await handleLogin({ email, password });
+      navigate('/');
+    } catch (err) {
+      setErrorMsg(err?.response?.data?.message || "Invalid email or password");
+    }
   };
 
   if (loading) {
@@ -29,6 +34,7 @@ const Login = () => {
     <main>
       <div className="form-container">
         <h1>Login</h1>
+        {errorMsg && <p className="error-message" style={{ color: "red", textAlign: "center", marginBottom: "1rem" }}>{errorMsg}</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">

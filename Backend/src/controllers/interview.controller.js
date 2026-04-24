@@ -12,12 +12,26 @@ async function generateInterViewReportController(req, res) {
   try {
     let resumeText = "";
     if (req.file && req.file.buffer) {
-      const resumeContent = await new pdfParse.PDFParse(
-        Uint8Array.from(req.file.buffer),
-      ).getText();
-      resumeText = resumeContent.text || "";
+      const originalWarn = console.warn;
+      console.warn = function (msg) {
+        if (msg && typeof msg === 'string' && msg.includes("standardFontDataUrl")) return;
+        originalWarn.apply(console, arguments);
+      };
+      
+      try {
+        const resumeContent = await new pdfParse.PDFParse(
+          Uint8Array.from(req.file.buffer),
+        ).getText();
+        resumeText = resumeContent.text || "";
+      } finally {
+        console.warn = originalWarn;
+      }
     }
     const { selfDescription, jobDescription } = req.body;
+
+    if (!resumeText || !selfDescription || !jobDescription) {
+      return res.status(400).json({ message: "Job description, resume file, and self description are all required." });
+    }
 
     const interViewReportByAi = await generateInterviewReport({
       resume: resumeText,

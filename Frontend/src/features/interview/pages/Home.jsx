@@ -7,11 +7,17 @@ const Home = () => {
   const { loading, generateReport, reports } = useInterview();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
+  const [resumeFileName, setResumeFileName] = useState("");
   const resumeInputRef = useRef();
   const navigate = useNavigate();
 
   const handleGenerateReport = async () => {
-    const resumeFile = resumeInputRef.current.files[0];
+    const resumeFile = resumeInputRef.current?.files?.[0];
+    if (!resumeFile || !selfDescription.trim() || !jobDescription.trim()) {
+      alert("Please provide the Job Description, a Resume PDF/DOCX, and a Quick Self-Description.");
+      return;
+    }
+
     const data = await generateReport({
       jobDescription,
       selfDescription,
@@ -129,9 +135,9 @@ const Home = () => {
                   </svg>
                 </span>
                 <p className="dropzone__title">
-                  Click to upload or drag &amp; drop
+                  {resumeFileName ? resumeFileName : "Click to upload or drag & drop"}
                 </p>
-                <p className="dropzone__subtitle">PDF or DOCX (Max 5MB)</p>
+                <p className="dropzone__subtitle">{resumeFileName ? "File selected" : "PDF or DOCX (Max 5MB)"}</p>
                 <input
                   ref={resumeInputRef}
                   hidden
@@ -139,13 +145,9 @@ const Home = () => {
                   id="resume"
                   name="resume"
                   accept=".pdf,.docx"
+                  onChange={(e) => setResumeFileName(e.target.files[0]?.name || "")}
                 />
               </label>
-            </div>
-
-            {/* OR Divider */}
-            <div className="or-divider">
-              <span>OR</span>
             </div>
 
             {/* Quick Self-Description */}
@@ -164,41 +166,7 @@ const Home = () => {
               />
             </div>
 
-            {/* Info Box */}
-            <div className="info-box">
-              <span className="info-box__icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line
-                    x1="12"
-                    y1="8"
-                    x2="12"
-                    y2="12"
-                    stroke="#1a1f27"
-                    strokeWidth="2"
-                  />
-                  <line
-                    x1="12"
-                    y1="16"
-                    x2="12.01"
-                    y2="16"
-                    stroke="#1a1f27"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </span>
-              <p>
-                Either a <strong>Resume</strong> or a{" "}
-                <strong>Self Description</strong> is required to generate a
-                personalized plan.
-              </p>
-            </div>
+
           </div>
         </div>
 
